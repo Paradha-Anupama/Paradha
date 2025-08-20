@@ -5,6 +5,9 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Paradha - Lift The Veil</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Telugu:wght@600;700&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
       <style>
           /* Base styles */
           * {
@@ -20,16 +23,80 @@
               overflow: hidden;
               height: 100vh;
           }
+
+          /* Background poster parallax */
+          #bg {
+              position: fixed;
+              inset: 0;
+              background-image: linear-gradient(rgba(15,10,6,0.65), rgba(15,10,6,0.9)), url('/public/Paradha_Film_Poster.jpg');
+              background-size: cover;
+              background-position: center 20%;
+              filter: saturate(0.9) contrast(1.05) brightness(0.55);
+              z-index: 0;
+              transform: translateZ(0);
+              will-change: background-position;
+          }
+
+          /* Custom cursor */
+          .cursor-dot {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              background: radial-gradient(circle at 30% 30%, #ffd56b, #d4af37);
+              box-shadow: 0 0 20px rgba(212,175,55,0.6), 0 0 40px rgba(212,175,55,0.3);
+              pointer-events: none;
+              z-index: 10000;
+              mix-blend-mode: screen;
+              opacity: 0.9;
+              transform: translate(-50%, -50%);
+          }
           
-          /* Veil overlay */
+          /* Veil overlay - Red Saree Style */
           #veil {
               position: fixed;
               left: 0;
               bottom: 0;
               width: 100%;
               height: 100%;
-              background: linear-gradient(rgba(20, 15, 10, 0.9), rgba(20, 15, 10, 0.9)), 
-                          url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23654321" stroke-width="2" stroke-dasharray="5,5"/></svg>');
+              background: 
+                  /* Red saree base with gradient */
+                  linear-gradient(135deg, 
+                      rgba(139, 0, 0, 0.95) 0%,
+                      rgba(178, 34, 34, 0.92) 25%,
+                      rgba(220, 20, 60, 0.9) 50%,
+                      rgba(139, 0, 0, 0.92) 75%,
+                      rgba(128, 0, 0, 0.95) 100%
+                  ),
+                  /* Saree border pattern */
+                  repeating-linear-gradient(
+                      90deg,
+                      transparent 0px,
+                      transparent 8px,
+                      rgba(255, 215, 0, 0.3) 8px,
+                      rgba(255, 215, 0, 0.3) 12px
+                  ),
+                  /* Vertical saree texture */
+                  repeating-linear-gradient(
+                      0deg,
+                      transparent 0px,
+                      transparent 4px,
+                      rgba(255, 255, 255, 0.05) 4px,
+                      rgba(255, 255, 255, 0.05) 6px
+                  ),
+                  /* Zari work pattern */
+                  radial-gradient(
+                      circle at 20% 30%,
+                      rgba(255, 215, 0, 0.2) 0%,
+                      transparent 50%
+                  ),
+                  radial-gradient(
+                      circle at 80% 70%,
+                      rgba(255, 215, 0, 0.15) 0%,
+                      transparent 50%
+                  );
               z-index: 100;
               cursor: grab;
               display: flex;
@@ -40,10 +107,47 @@
               padding: 20px;
               transition: opacity 1s ease, transform 1s ease;
               will-change: transform, opacity;
+              /* Saree-like shadow and depth */
+              box-shadow: 
+                  inset 0 0 100px rgba(0, 0, 0, 0.3),
+                  0 0 50px rgba(139, 0, 0, 0.4);
           }
           
           #veil.dragging {
               cursor: grabbing;
+              /* Saree movement effect */
+              background: 
+                  linear-gradient(135deg, 
+                      rgba(139, 0, 0, 0.9) 0%,
+                      rgba(178, 34, 34, 0.87) 25%,
+                      rgba(220, 20, 60, 0.85) 50%,
+                      rgba(139, 0, 0, 0.87) 75%,
+                      rgba(128, 0, 0, 0.9) 100%
+                  ),
+                  repeating-linear-gradient(
+                      90deg,
+                      transparent 0px,
+                      transparent 8px,
+                      rgba(255, 215, 0, 0.4) 8px,
+                      rgba(255, 215, 0, 0.4) 12px
+                  ),
+                  repeating-linear-gradient(
+                      0deg,
+                      transparent 0px,
+                      transparent 4px,
+                      rgba(255, 255, 255, 0.08) 4px,
+                      rgba(255, 255, 255, 0.08) 6px
+                  ),
+                  radial-gradient(
+                      circle at 20% 30%,
+                      rgba(255, 215, 0, 0.25) 0%,
+                      transparent 50%
+                  ),
+                  radial-gradient(
+                      circle at 80% 70%,
+                      rgba(255, 215, 0, 0.2) 0%,
+                      transparent 50%
+                  );
           }
           
           #veil.hidden {
@@ -58,11 +162,20 @@
           }
 
           h1 {
-              font-size: 3rem;
+              font-size: 3.2rem;
               margin-bottom: 20px;
               color: #d4af37;
               text-transform: uppercase;
               letter-spacing: 5px;
+          }
+          .title-telugu {
+              font-family: 'Noto Serif Telugu', serif;
+              font-weight: 700;
+              letter-spacing: 1px;
+              color: #e9c86b;
+              text-shadow: 0 6px 22px rgba(0,0,0,0.6);
+              font-size: 2rem;
+              margin-top: 6px;
           }
           
           p {
@@ -85,6 +198,7 @@
               padding: 20px;
               opacity: 0;
               transition: opacity 1s ease;
+              z-index: 1;
           }
           
           #content.revealed {
@@ -101,6 +215,24 @@
               max-width: 1000px;
               margin: 0 auto;
           }
+
+          .hero {
+              text-align: center;
+          }
+          .hero h2 {
+              font-family: 'Playfair+Display', 'Playfair Display', serif;
+              font-weight: 800;
+              letter-spacing: 1px;
+              color: #f0dea6;
+              font-size: 2.2rem;
+              text-transform: uppercase;
+              text-shadow: 0 10px 30px rgba(0,0,0,0.55);
+          }
+          .tagline {
+              font-size: 1rem;
+              color: #d4c7a2;
+              opacity: 0.95;
+          }
           
           .movie-poster {
               width: 300px;
@@ -116,6 +248,13 @@
               font-size: 1.5rem;
               text-align: center;
               padding: 20px;
+              border-radius: 10px;
+              overflow: hidden;
+              transition: transform 0.5s ease, box-shadow 0.5s ease;
+          }
+          .movie-poster:hover {
+              transform: translateY(-6px) scale(1.02);
+              box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 30px rgba(212,175,55,0.18);
           }
           
           .btn {
@@ -136,6 +275,15 @@
               transform: translateY(-2px);
               box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
           }
+
+          .btn.secondary {
+              background: transparent;
+              color: #e6d6b7;
+              border: 1px solid rgba(212,175,55,0.6);
+          }
+          .btn.secondary:hover {
+              background: rgba(212,175,55,0.12);
+          }
           
           .social-share {
               margin-top: 30px;
@@ -149,6 +297,106 @@
               border-radius: 10px;
               margin: 15px 0;
               border-left: 4px solid #d4af37;
+          }
+
+          /* Countdown */
+          .countdown {
+              display: flex;
+              gap: 14px;
+              margin-top: 18px;
+          }
+          .count-block {
+              background: rgba(20, 15, 10, 0.5);
+              border: 1px solid rgba(212,175,55,0.3);
+              padding: 10px 14px;
+              border-radius: 10px;
+              min-width: 70px;
+              text-align: center;
+          }
+          .count-number {
+              font-size: 1.4rem;
+              color: #f0dea6;
+              font-weight: 800;
+              font-family: 'Playfair Display', serif;
+          }
+          .count-label {
+              font-size: 0.8rem;
+              color: #c9b27d;
+              letter-spacing: 1px;
+          }
+
+          /* Character card */
+          .character {
+              display: grid;
+              grid-template-columns: 140px 1fr;
+              gap: 18px;
+              align-items: center;
+              background: rgba(25, 20, 15, 0.55);
+              border: 1px solid rgba(212,175,55,0.25);
+              padding: 14px;
+              border-radius: 12px;
+              margin-top: 26px;
+              backdrop-filter: blur(2px);
+          }
+          .avatar {
+              width: 140px;
+              height: 140px;
+              border-radius: 12px;
+              overflow: hidden;
+              border: 2px solid rgba(212,175,55,0.5);
+          }
+          .avatar img { width: 100%; height: 100%; object-fit: cover; }
+          .character h3 { font-family: 'Playfair Display', serif; color: #f0dea6; margin-bottom: 6px; }
+          .character p { font-size: 0.98rem; margin: 0; color: #e8d8b4; }
+
+          /* Journey mini-reveal */
+          .journey {
+              display: grid;
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+              gap: 10px;
+              margin-top: 24px;
+              width: 100%;
+          }
+          .node {
+              background: rgba(212,175,55,0.12);
+              border: 1px dashed rgba(212,175,55,0.5);
+              border-radius: 10px;
+              padding: 12px;
+              text-align: center;
+              cursor: pointer;
+              transition: background 0.3s ease, transform 0.2s ease;
+              user-select: none;
+          }
+          .node:hover { background: rgba(212,175,55,0.2); transform: translateY(-2px); }
+          .node.revealed { background: rgba(76, 175, 80, 0.18); border-style: solid; }
+
+          /* Modal */
+          .modal {
+              position: fixed;
+              inset: 0;
+              display: none;
+              align-items: center;
+              justify-content: center;
+              background: rgba(0,0,0,0.7);
+              z-index: 2000;
+              padding: 20px;
+          }
+          .modal.open { display: flex; }
+          .modal-content {
+              width: min(900px, 92vw);
+              background: #14100c;
+              border: 1px solid rgba(212,175,55,0.35);
+              border-radius: 12px;
+              padding: 16px;
+              box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+          }
+          .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+          .close { background: transparent; border: 0; color: #e6d6b7; font-size: 1.6rem; cursor: pointer; }
+          .teaser-placeholder {
+              display: grid; place-items: center; height: 55vh; border-radius: 8px;
+              background: repeating-linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.08) 12px, rgba(255,255,255,0.03) 12px, rgba(255,255,255,0.03) 24px);
+              color: #e6d6b7;
+              text-align: center;
           }
           
           /* Responsive adjustments */
@@ -165,39 +413,79 @@
                   width: 200px;
                   height: 300px;
               }
+              .character { grid-template-columns: 1fr; text-align: center; }
+              .avatar { margin: 0 auto; }
           }
       </style>
   </head>
   <body>
+      <div id="bg" aria-hidden="true"></div>
+      <div class="cursor-dot" aria-hidden="true"></div>
       <!-- The interactive veil that users must "lift" -->
       <div id="veil">
           <h1>PARADHA</h1>
+          <div class="title-telugu">పరదా</div>
           <div class="instructions">
-              <p>A curse has fallen upon this village, shrouding everything in mystery.</p>
-              <p>Click and drag <b>upward</b> to lift the veil and discover the truth.</p>
+              <p class="tagline">Tradition. Rebellion. Revelation.</p>
+              <p>Click and drag <b>upward</b> to lift the red saree veil.</p>
           </div>
-          <div class="hint">The more you explore, the more you'll uncover</div>
+          <div class="hint">Like Subbu, break free from the traditions that bind</div>
       </div>
       
       <!-- Main content revealed after lifting the veil -->
       <div id="content">
-          <div class="section">
-              <div class="movie-poster">
-                <img src="/public/Paradha_Film_Poster.jpg" alt="Paradha Film Poster" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+          <div class="section hero">
+              <div class="movie-poster" aria-label="Paradha Poster">
+                <img src="/public/Paradha_Film_Poster.jpg" alt="Paradha Film Poster" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">
               </div>
-              <h2>What lies beneath the veil?</h2>
-              <p>Paradha is an upcoming Telugu social drama about tradition, rebellion, and discovering one's true self.</p>
-              <p>Releasing August 22, 2025</p>
-              
-              <div class="clue">
-                  <p>🔍 Secret clue: The title "Paradha" refers to the veil that women in the village are forced to wear.</p>
+              <h2>Lift the Veil</h2>
+              <p class="tagline">An upcoming Telugu social drama of courage and change.</p>
+
+              <div class="countdown" role="timer" aria-live="polite">
+                  <div class="count-block"><div class="count-number" id="d">00</div><div class="count-label">Days</div></div>
+                  <div class="count-block"><div class="count-number" id="h">00</div><div class="count-label">Hours</div></div>
+                  <div class="count-block"><div class="count-number" id="m">00</div><div class="count-label">Mins</div></div>
+                  <div class="count-block"><div class="count-number" id="s">00</div><div class="count-label">Secs</div></div>
               </div>
-              
-              <button class="btn" onclick="revealTrailer()">Watch Teaser</button>
-              
-              <div class="social-share">
-                  <button class="btn" onclick="shareOnTwitter()">Share on Twitter</button>
+
+              <div style="margin-top:20px; display:flex; flex-wrap:wrap; justify-content:center; gap:10px;">
+                  <button class="btn" onclick="openTeaser()">Watch Teaser</button>
+                  <button class="btn secondary" onclick="toggleJourney()">Explore Journey</button>
+              </div>
+
+              <div class="character" aria-label="Lead Character">
+                  <div class="avatar"><img src="/public/Paradha_Anupama.jpeg" alt="Subbu – Lead"></div>
+                  <div>
+                      <h3>Subbu</h3>
+                      <p>Behind the పరదా lies a voice that refuses silence.</p>
+                  </div>
+              </div>
+
+              <div id="journey" class="journey" style="display:none;" aria-hidden="true">
+                  <div class="node" onclick="revealNode(this)">Village</div>
+                  <div class="node" onclick="revealNode(this)">Tradition</div>
+                  <div class="node" onclick="revealNode(this)">Revelation</div>
+              </div>
+
+              <div class="social-share" aria-label="Share">
+                  <button class="btn" onclick="shareOnTwitter()">Share on X</button>
                   <button class="btn" onclick="shareOnWhatsApp()">Share on WhatsApp</button>
+              </div>
+          </div>
+      </div>
+
+      <!-- Teaser Modal -->
+      <div id="teaserModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="teaser-title">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h3 id="teaser-title" style="font-family:'Playfair Display',serif;color:#f0dea6;">Official Teaser</h3>
+                  <button class="close" aria-label="Close" onclick="closeTeaser()">×</button>
+              </div>
+              <div class="teaser-placeholder">
+                  <div>
+                      <p style="margin-bottom:10px; font-size:1.05rem;">Teaser coming soon.</p>
+                      <p style="opacity:0.9;">Check back for the embedded video.</p>
+                  </div>
               </div>
           </div>
       </div>
@@ -328,8 +616,13 @@
           }
 
           // Interactive functions
-          function revealTrailer() {
-              alert("Trailer would play here! In a real implementation, this would open a modal with the YouTube trailer.");
+          function openTeaser() {
+              const modal = document.getElementById('teaserModal');
+              modal.classList.add('open');
+          }
+          function closeTeaser() {
+              const modal = document.getElementById('teaserModal');
+              modal.classList.remove('open');
           }
 
           function shareOnTwitter() {
@@ -373,6 +666,62 @@
                   }, 5000);
               }
           }, 10000);
+
+          // Countdown timer to release (adjust if needed)
+          const releaseDate = new Date('2025-08-22T00:00:00+05:30');
+          const d = document.getElementById('d');
+          const h = document.getElementById('h');
+          const m = document.getElementById('m');
+          const s = document.getElementById('s');
+          function updateCountdown() {
+              const now = new Date();
+              const diff = Math.max(0, releaseDate - now);
+              const sec = Math.floor(diff / 1000);
+              const days = Math.floor(sec / 86400);
+              const hours = Math.floor((sec % 86400) / 3600);
+              const mins = Math.floor((sec % 3600) / 60);
+              const secs = sec % 60;
+              if (d) d.textContent = String(days).padStart(2, '0');
+              if (h) h.textContent = String(hours).padStart(2, '0');
+              if (m) m.textContent = String(mins).padStart(2, '0');
+              if (s) s.textContent = String(secs).padStart(2, '0');
+          }
+          updateCountdown();
+          setInterval(updateCountdown, 1000);
+
+          // Journey toggles
+          function toggleJourney() {
+              const j = document.getElementById('journey');
+              const isHidden = j.style.display === 'none';
+              j.style.display = isHidden ? 'grid' : 'none';
+              j.setAttribute('aria-hidden', (!isHidden).toString());
+          }
+          function revealNode(el) {
+              el.classList.toggle('revealed');
+              if (el.textContent === 'Village') el.textContent = 'Whispers';
+              else if (el.textContent === 'Tradition') el.textContent = 'Test';
+              else if (el.textContent === 'Revelation') el.textContent = 'Rise';
+          }
+
+          // Custom cursor follow
+          const cursor = document.querySelector('.cursor-dot');
+          let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+          let tx = cx, ty = cy;
+          const follow = () => {
+              cx += (tx - cx) * 0.18;
+              cy += (ty - cy) * 0.18;
+              cursor.style.transform = `translate(${cx}px, ${cy}px)`;
+              requestAnimationFrame(follow);
+          };
+          follow();
+          window.addEventListener('mousemove', (e) => { tx = e.clientX; ty = e.clientY; });
+
+          // Subtle parallax background on scroll
+          const bg = document.getElementById('bg');
+          content.addEventListener('scroll', () => {
+              const ratio = content.scrollTop / (content.scrollHeight - content.clientHeight);
+              bg.style.backgroundPosition = `center ${20 + ratio * 20}%`;
+          });
       </script>
   </body>
 </html>
