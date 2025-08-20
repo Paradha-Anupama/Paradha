@@ -154,170 +154,43 @@
               border-radius: 0 0 60% 60% / 0 0 25% 25%;
               /* Saree fabric properties */
               backdrop-filter: blur(0.5px);
+              background-image: 
+                url('public/veil_texture.png'), /* add a subtle fabric texture */
+                linear-gradient(135deg, rgba(139,0,0,0.95), rgba(178,34,34,0.92), rgba(220,20,60,0.9));
+              background-blend-mode: overlay;
+              backdrop-filter: blur(1px);
           }
 
-          /* Realistic human hands lifting the saree */
-          #veil::before,
-          #veil::after {
-              content: '';
-              position: absolute;
-              width: 70px;
-              height: 100px;
-              z-index: 101;
-              transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-              transform-origin: bottom center;
+          .hand {
+            position: fixed;
+            bottom: -5px;          /* overlap slightly with veil edge */
+            width: 220px;          /* a little larger for natural grip */
+            max-width: 25vw;       /* responsive */
+            z-index: 150;          /* above veil */
+            pointer-events: none;
+            filter: drop-shadow(0 6px 10px rgba(0,0,0,0.5));
+            transition: transform 0.4s ease, opacity 0.8s ease;
           }
 
-          /* Left hand with realistic fingers and palm */
-          #veil::before {
-              left: 25%;
-              top: 5%;
-              transform: rotate(-5deg) translateY(0);
-              background: 
-                  /* Palm base */
-                  radial-gradient(
-                      ellipse at 50% 45%,
-                      #fdbcb4 0%,
-                      #f4a261 15%,
-                      #e76f51 40%,
-                      #d62828 65%,
-                      #9d4edd 100%
-                  ),
-                  /* Index finger */
-                  radial-gradient(
-                      ellipse at 45% 15%,
-                      #fdbcb4 0%,
-                      #f4a261 20%,
-                      #e76f51 45%,
-                      #d62828 70%,
-                      #9d4edd 100%
-                  ),
-                  /* Middle finger */
-                  radial-gradient(
-                      ellipse at 55% 12%,
-                      #fdbcb4 0%,
-                      #f4a261 20%,
-                      #e76f51 45%,
-                      #d62828 70%,
-                      #9d4edd 100%
-                  ),
-                  /* Ring finger */
-                  radial-gradient(
-                      ellipse at 65% 15%,
-                      #fdbcb4 0%,
-                      #f4a261 20%,
-                      #e76f51 45%,
-                      #d62828 70%,
-                      #9d4edd 100%
-                  ),
-                  /* Pinky finger */
-                  radial-gradient(
-                      ellipse at 75% 18%,
-                      #fdbcb4 0%,
-                      #f4a261 20%,
-                      #e76f51 45%,
-                      #d62828 70%,
-                      #9d4edd 100%
-                  ),
-                  /* Thumb */
-                  radial-gradient(
-                      ellipse at 20% 60%,
-                      #fdbcb4 0%,
-                      #f4a261 25%,
-                      #e76f51 50%,
-                      #d62828 75%,
-                      #9d4edd 100%
-                  ),
-                  /* Hand creases and natural shadows */
-                  radial-gradient(
-                      ellipse at 50% 55%,
-                      transparent 0%,
-                      rgba(0, 0, 0, 0.08) 30%,
-                      rgba(0, 0, 0, 0.15) 60%,
-                      transparent 100%
-                  );
-              border-radius: 35px 35px 20px 20px;
-              box-shadow: 
-                  inset 0 0 20px rgba(255, 255, 255, 0.25),
-                  0 4px 12px rgba(0, 0, 0, 0.4),
-                  inset 0 0 40px rgba(0, 0, 0, 0.1),
-                  0 0 0 1px rgba(0, 0, 0, 0.08);
+          .hand-left {
+            left: -20px;           /* push outward so it looks like it’s holding the veil edge */
+            transform: rotate(-6deg);
           }
 
-          /* Right hand with realistic fingers and palm */
-          #veil::after {
-              right: 25%;
-              top: 5%;
-              transform: rotate(5deg) translateY(0);
-              background: 
-                  /* Palm base */
-                  radial-gradient(
-                      ellipse at 50% 45%,
-                      #fdbcb4 0%,
-                      #f4a261 15%,
-                      #e76f51 40%,
-                      #d62828 65%,
-                      #9d4edd 100%
-                  ),
-                  /* Index finger */
-                  radial-gradient(
-                      ellipse at 55% 15%,
-                      #fdbcb4 0%,
-                      #f4a261 20%,
-                      #e76f51 45%,
-                      #d62828 70%,
-                      #9d4edd 100%
-                  ),
-                  /* Middle finger */
-                  radial-gradient(
-                      ellipse at 45% 12%,
-                      #fdbcb4 0%,
-                      #f4a261 20%,
-                      #e76f51 45%,
-                      #d62828 70%,
-                      #9d4edd 100%
-                  ),
-                  /* Ring finger */
-                  radial-gradient(
-                      ellipse at 35% 15%,
-                      #fdbcb4 0%,
-                      #f4a261 20%,
-                      #e76f51 45%,
-                      #d62828 70%,
-                      #9d4edd 100%
-                  ),
-                  /* Pinky finger */
-                  radial-gradient(
-                      ellipse at 25% 18%,
-                      #fdbcb4 0%,
-                      #f4a261 20%,
-                      #e76f51 45%,
-                      #d62828 70%,
-                      #9d4edd 100%
-                  ),
-                  /* Thumb */
-                  radial-gradient(
-                      ellipse at 80% 60%,
-                      #fdbcb4 0%,
-                      #f4a261 25%,
-                      #e76f51 50%,
-                      #d62828 75%,
-                      #9d4edd 100%
-                  ),
-                  /* Hand creases and natural shadows */
-                  radial-gradient(
-                      ellipse at 50% 55%,
-                      transparent 0%,
-                      rgba(0, 0, 0, 0.08) 30%,
-                      rgba(0, 0, 0, 0.15) 60%,
-                      transparent 100%
-                  );
-              border-radius: 35px 35px 20px 20px;
-              box-shadow: 
-                  inset 0 0 20px rgba(255, 255, 255, 0.25),
-                  0 4px 12px rgba(0, 0, 0, 0.4),
-                  inset 0 0 40px rgba(0, 0, 0, 0.1),
-                  0 0 0 1px rgba(0, 0, 0, 0.08);
+          .hand-right {
+            right: -20px;          /* push outward symmetrically */
+            transform: scaleX(-1) rotate(6deg); /* mirror + rotate */
+          }
+
+          .hand.fade-out {
+            opacity: 0;
+          }
+
+          #veil.dragging ~ .hand-left {
+            transform: rotate(-8deg) translateY(-40px) scale(1.05);
+          }
+          #veil.dragging ~ .hand-right {
+            transform: scaleX(-1) rotate(8deg) translateY(-40px) scale(1.05);
           }
 
           /* Hands movement during drag - realistic lifting motion */
@@ -333,41 +206,7 @@
           
           #veil.dragging {
               cursor: grabbing;
-              /* Saree movement effect - more realistic fabric */
-              background: 
-                  linear-gradient(135deg, 
-                      rgba(139, 0, 0, 0.92) 0%,
-                      rgba(178, 34, 34, 0.89) 20%,
-                      rgba(220, 20, 60, 0.86) 40%,
-                      rgba(255, 0, 0, 0.83) 60%,
-                      rgba(178, 34, 34, 0.89) 80%,
-                      rgba(139, 0, 0, 0.92) 100%
-                  ),
-                  repeating-linear-gradient(
-                      90deg,
-                      transparent 0px,
-                      transparent 6px,
-                      rgba(255, 215, 0, 0.5) 6px,
-                      rgba(255, 215, 0, 0.5) 10px
-                  ),
-                  repeating-linear-gradient(
-                      0deg,
-                      transparent 0px,
-                      transparent 2px,
-                      rgba(255, 255, 255, 0.06) 2px,
-                      rgba(255, 255, 255, 0.06) 4px
-                  ),
-                  radial-gradient(
-                      ellipse at 25% 25%,
-                      rgba(255, 215, 0, 0.2) 0%,
-                      transparent 60%
-                  ),
-                  radial-gradient(
-                      ellipse at 75% 75%,
-                      rgba(255, 215, 0, 0.18) 0%,
-                      transparent 60%
-                  );
-              /* Enhanced saree movement */
+              
               filter: brightness(1.15) contrast(1.08) saturate(1.1);
               transform: scale(1.02);
           }
@@ -648,25 +487,19 @@
           <div class="title-telugu">పరదా</div>
           <div class="instructions">
               <p class="tagline">Tradition! Rebellion! Revelation!</p>
-              <p>Click and drag <b>upward</b> to lift the red saree veil!</p>
+              <p>Use <b>two fingers</b> and swipe upward to lift the red saree veil!</p>
           </div>
           <div class="hint">Like Subbu, break free from the traditions that bind</div>
       </div>
       <img 
         src="public/Real_Human_Hand.png" 
-        alt="Real hands holding a draped saree veil" 
-        style="
-            position: absolute;
-            left: 50%; 
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 320px;
-            max-width: 80vw;
-            z-index: 101;
-            pointer-events: none;
-            border-radius: 24px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-        "
+        alt="Left hand lifting the veil" 
+        class="hand hand-left"
+      />
+      <img 
+        src="public/Real_Human_Hand.png" 
+        alt="Right hand lifting the veil" 
+        class="hand hand-right"
       />
       <!-- Main content revealed after lifting the veil -->
       <div id="content">
@@ -733,40 +566,44 @@
           let startY = 0;
           let currentY = 0;
           let veilHeight = window.innerHeight;
-          let isDragging = false;
-          
-          // Mobile touch events
-          veil.addEventListener('touchstart', (e) => {
-              startY = e.touches[0].clientY;
-              isDragging = true;
-              veil.classList.add('dragging');
+          let isTwoFinger = false;
+
+          veil.addEventListener("touchstart", (e) => {
+            if (e.touches.length === 2) {
+              // Two fingers placed
+              isTwoFinger = true;
+              startY = (e.touches[0].clientY + e.touches[1].clientY) / 2; // average Y
+              veil.classList.add("dragging");
+            }
           });
-          
-          veil.addEventListener('touchmove', (e) => {
-              if (!isDragging) return;
-              currentY = e.touches[0].clientY;
-              const deltaY = startY - currentY; // Upward drag is positive
 
-              if (deltaY > 0) {
-                  veil.style.transform = `translateY(-${deltaY}px)`;
-                  veil.style.opacity = 1 - (deltaY / veilHeight);
+          veil.addEventListener("touchmove", (e) => {
+            if (!isTwoFinger || e.touches.length !== 2) return;
 
-                  if (deltaY > veilHeight * 0.7) {
-                      completeVeilLift();
-                  }
+            currentY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+            const deltaY = startY - currentY; // upward drag is positive
+
+            if (deltaY > 0) {
+              veil.style.transform = `translateY(-${deltaY}px)`;
+              veil.style.opacity = 1 - deltaY / veilHeight;
+
+              if (deltaY > veilHeight * 0.7) {
+                completeVeilLift();
               }
+            }
           });
 
-          veil.addEventListener('touchend', () => {
-              isDragging = false;
-              veil.classList.remove('dragging');
-              
-              // Snap back if not lifted enough
-              if (startY - currentY < veilHeight * 0.7) {
-                  veil.style.transform = 'translateY(0)';
-                  veil.style.opacity = 1;
+          veil.addEventListener("touchend", (e) => {
+            if (e.touches.length < 2) {
+              if (!veil.classList.contains("hidden")) {
+                veil.style.transform = "translateY(0)";
+                veil.style.opacity = 1;
               }
+              isTwoFinger = false;
+              veil.classList.remove("dragging");
+            }
           });
+
           
           // Desktop mouse events
           veil.addEventListener('mousedown', (e) => {
@@ -808,7 +645,13 @@
               isDragging = false;
               veil.classList.add('hidden');
               content.classList.add('revealed');
+
+              veil.style.transition = "transform 1.8s cubic-bezier(0.25, 1, 0.3, 1), opacity 1.2s ease";
               veil.style.transform = 'translateY(-100vh)';
+              veil.style.opacity = '0';
+
+              document.querySelectorAll('.hand').forEach(h => h.classList.add('fade-out'));
+
               
               // Celebration effect
               const confetti = document.createElement('div');
@@ -875,7 +718,7 @@
           setTimeout(() => {
               if (!content.classList.contains('revealed')) {
                   const hint = document.createElement('div');
-                  hint.innerHTML = "💡 Hint: Try dragging the veil upward with your mouse or finger";
+                  hint.innerHTML = "💡 Hint: Try dragging the veil upward with two of your fingers";
                   hint.style.position = 'fixed';
                   hint.style.bottom = '20px';
                   hint.style.left = '50%';
