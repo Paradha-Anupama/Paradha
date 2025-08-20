@@ -24,8 +24,8 @@
           /* Veil overlay */
           #veil {
               position: fixed;
-              top: 0;
               left: 0;
+              bottom: 0;
               width: 100%;
               height: 100%;
               background: linear-gradient(rgba(20, 15, 10, 0.9), rgba(20, 15, 10, 0.9)), 
@@ -38,7 +38,8 @@
               align-items: center;
               text-align: center;
               padding: 20px;
-              transition: opacity 1s ease;
+              transition: opacity 1s ease, transform 1s ease;
+              will-change: transform, opacity;
           }
           
           #veil.dragging {
@@ -55,7 +56,7 @@
               max-width: 500px;
               text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
           }
-          
+
           h1 {
               font-size: 3rem;
               margin-bottom: 20px;
@@ -69,7 +70,7 @@
               line-height: 1.6;
               margin-bottom: 15px;
           }
-          
+
           .hint {
               margin-top: 20px;
               font-style: italic;
@@ -173,7 +174,7 @@
           <h1>PARADHA</h1>
           <div class="instructions">
               <p>A curse has fallen upon this village, shrouding everything in mystery.</p>
-              <p>Click and drag downward to lift the veil and discover the truth.</p>
+              <p>Click and drag <b>upward</b> to lift the veil and discover the truth.</p>
           </div>
           <div class="hint">The more you explore, the more you'll uncover</div>
       </div>
@@ -181,7 +182,9 @@
       <!-- Main content revealed after lifting the veil -->
       <div id="content">
           <div class="section">
-              <div class="movie-poster">PARADHA<br>POSTER<br>IMAGE</div>
+              <div class="movie-poster">
+                <img src="/public/Paradha_Film_Poster.jpg" alt="Paradha Film Poster" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+              </div>
               <h2>What lies beneath the veil?</h2>
               <p>Paradha is an upcoming Telugu social drama about tradition, rebellion, and discovering one's true self.</p>
               <p>Releasing August 22, 2025</p>
@@ -200,7 +203,7 @@
       </div>
   
       <script>
-          // Veil interaction logic
+          // Veil interaction logic (bottom to up)
           const veil = document.getElementById('veil');
           const content = document.getElementById('content');
           let startY = 0;
@@ -218,24 +221,24 @@
           veil.addEventListener('touchmove', (e) => {
               if (!isDragging) return;
               currentY = e.touches[0].clientY;
-              const deltaY = currentY - startY;
-              
+              const deltaY = startY - currentY; // Upward drag is positive
+
               if (deltaY > 0) {
-                  veil.style.transform = `translateY(${deltaY}px)`;
+                  veil.style.transform = `translateY(-${deltaY}px)`;
                   veil.style.opacity = 1 - (deltaY / veilHeight);
-                  
+
                   if (deltaY > veilHeight * 0.7) {
                       completeVeilLift();
                   }
               }
           });
-          
+
           veil.addEventListener('touchend', () => {
               isDragging = false;
               veil.classList.remove('dragging');
               
               // Snap back if not lifted enough
-              if (currentY - startY < veilHeight * 0.7) {
+              if (startY - currentY < veilHeight * 0.7) {
                   veil.style.transform = 'translateY(0)';
                   veil.style.opacity = 1;
               }
@@ -248,22 +251,22 @@
               veil.classList.add('dragging');
               document.body.style.cursor = 'grabbing';
           });
-          
+
           document.addEventListener('mousemove', (e) => {
               if (!isDragging) return;
               currentY = e.clientY;
-              const deltaY = currentY - startY;
-              
+              const deltaY = startY - currentY; // Upward drag is positive
+
               if (deltaY > 0) {
-                  veil.style.transform = `translateY(${deltaY}px)`;
+                  veil.style.transform = `translateY(-${deltaY}px)`;
                   veil.style.opacity = 1 - (deltaY / veilHeight);
-                  
+
                   if (deltaY > veilHeight * 0.7) {
                       completeVeilLift();
                   }
               }
           });
-          
+
           document.addEventListener('mouseup', () => {
               if (!isDragging) return;
               isDragging = false;
@@ -271,16 +274,17 @@
               document.body.style.cursor = 'default';
               
               // Snap back if not lifted enough
-              if (currentY - startY < veilHeight * 0.7) {
+              if (startY - currentY < veilHeight * 0.7) {
                   veil.style.transform = 'translateY(0)';
                   veil.style.opacity = 1;
               }
           });
-          
+
           function completeVeilLift() {
               isDragging = false;
               veil.classList.add('hidden');
               content.classList.add('revealed');
+              veil.style.transform = 'translateY(-100vh)';
               
               // Celebration effect
               const confetti = document.createElement('div');
@@ -292,7 +296,7 @@
               confetti.style.pointerEvents = 'none';
               confetti.style.zIndex = '1000';
               document.body.appendChild(confetti);
-              
+
               // Simple CSS confetti effect
               for (let i = 0; i < 50; i++) {
                   const particle = document.createElement('div');
@@ -306,12 +310,12 @@
                   particle.style.animation = `confetti-fall ${1 + Math.random() * 2}s forwards`;
                   confetti.appendChild(particle);
               }
-              
+
               // Remove confetti after animation
               setTimeout(() => {
                   document.body.removeChild(confetti);
               }, 3000);
-              
+
               // Add CSS for confetti animation
               const style = document.createElement('style');
               style.textContent = `
@@ -322,27 +326,27 @@
               `;
               document.head.appendChild(style);
           }
-          
+
           // Interactive functions
           function revealTrailer() {
               alert("Trailer would play here! In a real implementation, this would open a modal with the YouTube trailer.");
           }
-          
+
           function shareOnTwitter() {
               const url = `https://twitter.com/intent/tweet?text=Uncover the mystery of #ParadhaMovie - I lifted the veil!&url=${encodeURIComponent(window.location.href)}`;
               window.open(url, '_blank');
           }
-          
+
           function shareOnWhatsApp() {
               const url = `https://wa.me/?text=Uncover the mystery of Paradha Movie - Lift the veil! ${encodeURIComponent(window.location.href)}`;
               window.open(url, '_blank');
           }
-          
+
           // Add some interactive hints that appear as users explore
           setTimeout(() => {
               if (!content.classList.contains('revealed')) {
                   const hint = document.createElement('div');
-                  hint.innerHTML = "💡 Hint: Try dragging the veil downward with your mouse or finger";
+                  hint.innerHTML = "💡 Hint: Try dragging the veil upward with your mouse or finger";
                   hint.style.position = 'fixed';
                   hint.style.bottom = '20px';
                   hint.style.left = '50%';
@@ -353,7 +357,7 @@
                   hint.style.zIndex = '101';
                   hint.style.animation = 'pulse 2s infinite';
                   document.body.appendChild(hint);
-                  
+
                   const pulseStyle = document.createElement('style');
                   pulseStyle.textContent = `
                       @keyframes pulse {
@@ -363,7 +367,7 @@
                       }
                   `;
                   document.head.appendChild(pulseStyle);
-                  
+
                   setTimeout(() => {
                       document.body.removeChild(hint);
                   }, 5000);
