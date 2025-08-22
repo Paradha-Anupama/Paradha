@@ -254,7 +254,7 @@
         }
 
         h1 {
-            font-size: 3.2rem;
+            font-size: clamp(2rem, 5vw, 3.2rem);
             margin-bottom: 20px;
             color: #d4af37;
             text-transform: uppercase;
@@ -273,12 +273,12 @@
             letter-spacing: 1px;
             color: #e9c86b;
             text-shadow: 0 6px 22px rgba(0,0,0,0.6);
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 4vw, 2rem);
             margin-top: 6px;
         }
 
         p {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
             line-height: 1.6;
             margin-bottom: 15px;
         }
@@ -317,7 +317,7 @@
             justify-content: center;
             align-items: center;
             padding: 40px 20px;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -330,67 +330,352 @@
             font-weight: 800;
             letter-spacing: 1px;
             color: #f0dea6;
-            font-size: 2.2rem;
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
             text-transform: uppercase;
             text-shadow: 0 10px 30px rgba(0,0,0,0.55);
         }
 
         .tagline {
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 2vw, 1rem);
             color: #d4c7a2;
             opacity: 0.95;
         }
 
-        .movie-poster {
-            width: 500px;
-            height: 280px;
-            border: 5px solid #d4af37;
+        /* Responsive poster container */
+        .poster-container {
+            position: relative;
+            perspective: 1000px;
+            width: 100%;
+            max-width: 500px;
+            height: auto;
             margin-bottom: 30px;
+            aspect-ratio: 16/9;
+        }
+
+        .poster-flip {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .poster-flip.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .poster-front, .poster-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border: 5px solid #d4af37;
+            border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .poster-front {
             background: linear-gradient(45deg, #2c1e16, #4a3223);
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #d4af37;
-            font-size: 1.5rem;
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
             overflow: hidden;
-            transition: transform 0.5s ease, box-shadow 0.5s ease;
         }
 
-        .movie-poster:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 30px rgba(212,175,55,0.18);
+        .poster-back {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.95), rgba(178, 34, 34, 0.92));
+            transform: rotateY(180deg);
+            padding: clamp(15px, 3vw, 20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-title {
+            font-family: 'Playfair Display', serif;
+            color: #f0dea6;
+            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            margin-bottom: clamp(15px, 3vw, 20px);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+
+        /* Responsive game grid */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* ✅ 5 columns, 2 rows = 10 figurines */
+            gap: clamp(5px, 1.5vw, 8px);
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 350px;
+            justify-items: center;
+        }
+
+        .figurine {
+            width: clamp(45px, 8vw, 60px);
+            height: clamp(60px, 10vw, 80px);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: visible;
+        }
+
+        .figurine:hover:not(.revealed):not(.disabled) {
+            transform: scale(1.1);
+            filter: drop-shadow(0 5px 15px rgba(212, 175, 55, 0.4));
+        }
+
+        .figurine.revealed {
+            pointer-events: none;
+        }
+
+        .figurine.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .figurine.correct {
+            filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.6));
+            animation: correctPulse 1s ease-in-out;
+        }
+
+        .figurine.wrong {
+            filter: drop-shadow(0 0 15px rgba(255, 107, 107, 0.6));
+            animation: wrongShake 0.5s ease-in-out;
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1.05); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .figurine-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: all 0.5s ease;
+            filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .figurine.revealed .figurine-image {
+            transform: scale(1.05);
+        }
+
+        .game-controls {
+            display: flex;
+            gap: clamp(8px, 2vw, 10px);
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .game-btn {
+            background: linear-gradient(135deg, #d4af37, #e6c158); /* brighter gold */
+            color: #1a1a1a;
+            border: none;
+            padding: clamp(6px, 2vw, 10px) clamp(12px, 3vw, 18px);
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .game-btn:hover {
+            background: linear-gradient(135deg, #e6c158, #f0d26b);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.6);
+        }
+
+
+
+        .game-message {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #f0dea6;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            max-width: 90%;
+        }
+
+        .game-message.show {
+            opacity: 1;
+        }
+
+        /* BookMyShow section styles */
+        .book-tickets {
+            position: relative;
+            background: linear-gradient(135deg, 
+                rgba(212, 175, 55, 0.15) 0%, 
+                rgba(178, 34, 34, 0.12) 50%, 
+                rgba(212, 175, 55, 0.18) 100%
+            );
+            border: 2px solid rgba(212, 175, 55, 0.6);
+            border-radius: 20px;
+            padding: clamp(20px, 4vw, 30px);
+            margin: 25px 0;
+            text-align: center;
+            box-shadow: 
+                0 15px 40px rgba(212, 175, 55, 0.2), 
+                inset 0 2px 10px rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-tickets::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(212, 175, 55, 0.3), 
+                transparent
+            );
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .book-tickets h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            color: #f0dea6;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 2;
+        }
+
+        .book-tickets {
+            padding: clamp(26px, 5vw, 36px); /* ✅ more space inside */
+            margin: 35px 0; /* ✅ slightly bigger gap around */
+            border-radius: 24px; /* ✅ smoother card look */
+        }
+
+        .book-now-btn {
+            background: linear-gradient(135deg, #d4af37 0%, #e6c158 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: clamp(14px, 3vw, 18px) clamp(26px, 5vw, 34px); /* ✅ more padding */
+            font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+            font-weight: bold;
+            border-radius: 55px; /* ✅ bigger pill shape */
+            cursor: pointer;
+            margin: 20px 12px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 
+                0 10px 28px rgba(212, 175, 55, 0.5),
+                inset 0 2px 6px rgba(255, 255, 255, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration:none;
+        }
+
+
+        .book-now-btn:hover {
+            background: linear-gradient(135deg, #e6c158 0%, #f0d26b 100%);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 
+                0 15px 35px rgba(212, 175, 55, 0.6),
+                inset 0 2px 8px rgba(255, 255, 255, 0.4);
+        }
+
+        .book-now-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .ticket-icon {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            animation: ticketBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes ticketBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .urgent-notice {
+            background: linear-gradient(45deg, rgba(255, 0, 0, 0.1), rgba(255, 69, 0, 0.1));
+            border: 1px dashed rgba(255, 69, 0, 0.6);
+            padding: 12px 20px;
+            border-radius: 15px;
+            margin-top: 15px;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            color: #ffab91;
+            position: relative;
+            z-index: 2;
+        }
+
+        .bookmyshow-logo {
+            display: inline-block;
+            background: #dc2626;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            margin-left: 8px;
+            vertical-align: middle;
         }
 
         /* Make buttons selectable and interactive */
         .btn {
-            background: #d4af37;
+            background: linear-gradient(135deg, #d4af37, #e6c158); /* rich gold */
             color: #1a1a1a;
             border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
+            padding: clamp(10px, 2.5vw, 14px) clamp(18px, 4vw, 28px); /* more padding */
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
             font-weight: bold;
-            border-radius: 30px;
+            border-radius: 35px;
             cursor: pointer;
             margin: 10px;
             transition: all 0.3s ease;
-            /* Re-enable selection for buttons */
-            -webkit-user-select: auto;
-            -moz-user-select: auto;
-            -ms-user-select: auto;
-            user-select: auto;
-            pointer-events: auto;
-        }
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            }
 
         .btn:hover {
-            background: #e6c158;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, #e6c158, #f0d26b);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.6);
         }
 
+        .btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
         .btn.secondary {
             background: transparent;
             color: #e6d6b7;
@@ -405,6 +690,8 @@
             margin-top: 30px;
             display: flex;
             gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .clue {
@@ -415,52 +702,25 @@
             border-left: 4px solid #d4af37;
         }
 
-        /* Countdown */
-        .countdown {
-            display: flex;
-            gap: 14px;
-            margin-top: 18px;
-        }
-
-        .count-block {
-            background: rgba(20, 15, 10, 0.5);
-            border: 1px solid rgba(212,175,55,0.3);
-            padding: 10px 14px;
-            border-radius: 10px;
-            min-width: 70px;
-            text-align: center;
-        }
-
-        .count-number {
-            font-size: 1.4rem;
-            color: #f0dea6;
-            font-weight: 800;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .count-label {
-            font-size: 0.8rem;
-            color: #c9b27d;
-            letter-spacing: 1px;
-        }
-
         /* Character card */
         .character {
             display: grid;
-            grid-template-columns: 140px 1fr;
-            gap: 18px;
+            grid-template-columns: clamp(120px, 25vw, 140px) 1fr;
+            gap: clamp(15px, 3vw, 18px);
             align-items: center;
             background: rgba(25, 20, 15, 0.55);
             border: 1px solid rgba(212,175,55,0.25);
-            padding: 14px;
+            padding: clamp(12px, 3vw, 14px);
             border-radius: 12px;
             margin-top: 26px;
             backdrop-filter: blur(2px);
+            max-width: 600px;
+            width: 100%;
         }
 
         .avatar {
-            width: 140px;
-            height: 140px;
+            width: 100%;
+            aspect-ratio: 1;
             border-radius: 12px;
             overflow: hidden;
             border: 2px solid rgba(212,175,55,0.5);
@@ -476,44 +736,13 @@
             font-family: 'Playfair Display', serif;
             color: #f0dea6;
             margin-bottom: 6px;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
         }
 
         .character p {
-            font-size: 0.98rem;
+            font-size: clamp(0.9rem, 2.2vw, 0.98rem);
             margin: 0;
             color: #e8d8b4;
-        }
-
-        /* Journey mini-reveal */
-        .journey {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 24px;
-            width: 100%;
-        }
-
-        .node {
-            background: rgba(212,175,55,0.12);
-            border: 1px dashed rgba(212,175,55,0.5);
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            user-select: none;
-            /* Re-enable interaction for journey nodes */
-            pointer-events: auto;
-        }
-
-        .node:hover {
-            background: rgba(212,175,55,0.2);
-            transform: translateY(-2px);
-        }
-
-        .node.revealed {
-            background: rgba(76, 175, 80, 0.18);
-            border-style: solid;
         }
 
         /* Modal */
@@ -533,11 +762,11 @@
         }
 
         .modal-content {
-            width: min(900px, 92vw);
+            width: min(900px, 95vw);
             background: #14100c;
             border: 1px solid rgba(212,175,55,0.35);
             border-radius: 12px;
-            padding: 16px;
+            padding: clamp(12px, 3vw, 16px);
             box-shadow: 0 30px 80px rgba(0,0,0,0.6);
         }
 
@@ -552,7 +781,7 @@
             background: transparent;
             border: 0;
             color: #e6d6b7;
-            font-size: 1.6rem;
+            font-size: clamp(1.4rem, 3.5vw, 1.6rem);
             cursor: pointer;
             /* Re-enable interaction for close button */
             -webkit-user-select: auto;
@@ -572,24 +801,95 @@
             text-align: center;
         }
 
-        /* Responsive adjustments */
+        /* Mobile specific adjustments */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
+            .instructions {
+                max-width: 90%;
+                margin-bottom: 20px;
             }
-            p {
-                font-size: 1rem;
+
+            .section {
+                padding: 20px 15px;
             }
-            .movie-poster {
-                width: 320px;
-                height: 180px;
-            }
+
             .character {
                 grid-template-columns: 1fr;
                 text-align: center;
+                gap: 15px;
             }
+
             .avatar {
+                width: clamp(100px, 30vw, 120px);
                 margin: 0 auto;
+            }
+
+            .game-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                max-width: 280px;
+            }
+
+            .social-share {
+                gap: 10px;
+            }
+
+            .btn {
+                min-width: 120px;
+                margin: 5px;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            .game-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+                max-width: 220px;
+            }
+
+            .figurine {
+                width: 40px;
+                height: 55px;
+            }
+
+            .game-controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .game-btn {
+                width: 100%;
+                max-width: 150px;
+            }
+        }
+
+        /* Tablet and larger mobile devices */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .game-grid {
+                grid-template-columns: repeat(5, 1fr);
+                max-width: 400px;
+            }
+
+            .character {
+                grid-template-columns: 160px 1fr;
+                max-width: 700px;
+            }
+        }
+
+        /* Large desktop screens */
+        @media (min-width: 1200px) {
+            .poster-container {
+                max-width: 600px;
+            }
+
+            .game-grid {
+                max-width: 420px;
+                gap: 10px;
+            }
+
+            .section {
+                max-width: 1400px;
             }
         }
     </style>
@@ -607,7 +907,7 @@
         </div>
         <div class="hint">Like Subbu, break free from the traditions that bind</div>
         
-                        <!-- Enhanced SVG clip path for flowing wave effect with hand positioning reference -->
+        <!-- Enhanced SVG clip path for flowing wave effect with hand positioning reference -->
         <svg width="0" height="0">
             <defs>
                 <clipPath id="flowingWaveClip" clipPathUnits="objectBoundingBox">
@@ -635,23 +935,45 @@
     <!-- Main content revealed after lifting the veil -->
     <div id="content">
         <div class="section hero">
-            <div class="movie-poster" aria-label="Paradha Poster">
-                <img src="public/Paradha_Film_Poster.jpeg" alt="Paradha Film Poster" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">
+            <div class="poster-container">
+                <div class="poster-flip" id="posterFlip">
+                    <div class="poster-front">
+                        <img src="public/Paradha_Film_Poster.jpeg" alt="Paradha Film Poster" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">
+                        <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.7);color:#d4af37;padding:5px 10px;border-radius:15px;font-size:0.8rem;">
+                            Click to Play 🎮
+                        </div>
+                    </div>
+                    <div class="poster-back">
+                        <div class="game-title">Find Subbu</div>
+                        <div class="game-grid" id="gameGrid">
+                            <!-- Figurines will be generated by JavaScript -->
+                        </div>
+                        <div class="game-controls">
+                            <button class="game-btn" onclick="resetGame()">Reset Game</button>
+                            <button class="game-btn" onclick="flipPoster()">Back to Poster</button>
+                        </div>
+                        <div class="game-message" id="gameMessage"></div>
+                    </div>
+                </div>
             </div>
             <h2>Paradha</h2>
             <h4>IN THE NAME OF LOVE</h4>
-            <p class="tagline">An upcoming Telugu social drama of courage and change</p>
-            
-            <div class="countdown" role="timer" aria-live="polite">
-                <div class="count-block"><div class="count-number" id="d">00</div><div class="count-label">Days</div></div>
-                <div class="count-block"><div class="count-number" id="h">00</div><div class="count-label">Hours</div></div>
-                <div class="count-block"><div class="count-number" id="m">00</div><div class="count-label">Mins</div></div>
-                <div class="count-block"><div class="count-number" id="s">00</div><div class="count-label">Secs</div></div>
-            </div>
+            <p class="tagline">Is now in the Theaters Worldwide</p>
             
             <div style="margin-top:20px; display:flex; flex-wrap:wrap; justify-content:center; gap:10px;">
                 <button class="btn" onclick="openTrailer()">Watch Trailer</button>
-                <button class="btn secondary" onclick="toggleJourney()">Explore Journey</button>
+            </div>
+
+            <!-- Enhanced BookMyShow Ticket Booking Section -->
+            <div class="book-tickets">
+                <h3>🎬 Book Your Tickets Now!</h3>
+                <a href="https://in.bookmyshow.com/movies/paradha/ET00398438" target="_blank" rel="noopener noreferrer" class="book-now-btn">                    <span class="ticket-icon">🎫</span>
+                    Book Tickets
+                </a>
+                <p>Experience the revolution on the big screen<span class="bookmyshow-logo">BookMyShow</span></p>
+                <div class="urgent-notice">
+                    ⚡ Limited seats available! Book now to witness Subbu's journey of breaking traditions.
+                </div>
             </div>
             
             <div class="character" aria-label="Lead Character">
@@ -660,12 +982,6 @@
                     <h3>Subbu</h3>
                     <p>Behind the పరదా lies a voice that refuses silence.</p>
                 </div>
-            </div>
-            
-            <div id="journey" class="journey" style="display:none;" aria-hidden="true">
-                <div class="node" onclick="revealNode(this)">Village</div>
-                <div class="node" onclick="revealNode(this)">Tradition</div>
-                <div class="node" onclick="revealNode(this)">Revelation</div>
             </div>
             
             <div class="social-share" aria-label="Share">
@@ -825,27 +1141,168 @@
             document.head.appendChild(style);
         }
 
+        // Enhanced Find Subbu Game Logic
+        let gameState = {
+            correctIndex: 0,
+            gameActive: true,
+            figurines: [],
+            gameFinished: false
+        };
+
+        function initializeGame() {
+            const gameGrid = document.getElementById('gameGrid');
+            gameGrid.innerHTML = '';
+            
+            // Reset game state
+            gameState.correctIndex = Math.floor(Math.random() * 10);
+            gameState.gameActive = true;
+            gameState.gameFinished = false;
+            gameState.figurines = [];
+            
+            // Create 10 figurines
+            for (let i = 0; i < 10; i++) {
+                const figurine = document.createElement('div');
+                figurine.className = 'figurine';
+                figurine.setAttribute('data-index', i);
+                figurine.onclick = () => revealFigurine(i);
+                
+                const figImage = document.createElement('img');
+                figImage.className = 'figurine-image';
+                figImage.src = 'public/Paradha_Veiled_Woman_Anupama.png';
+                figImage.alt = 'Veiled figurine';
+                
+                figurine.appendChild(figImage);
+                gameGrid.appendChild(figurine);
+                gameState.figurines.push(figurine);
+            }
+            
+            // Clear any previous message
+            const message = document.getElementById('gameMessage');
+            message.textContent = '';
+            message.classList.remove('show');
+        }
+
+        function revealFigurine(index) {
+            // Check if game is still active
+            if (!gameState.gameActive || gameState.gameFinished) return;
+            
+            const figurine = gameState.figurines[index];
+            const figImage = figurine.querySelector('.figurine-image');
+            const message = document.getElementById('gameMessage');
+            
+            // Mark this figurine as revealed
+            figurine.classList.add('revealed');
+            
+            // Disable ALL figurines immediately after first click
+            disableAllFigurines();
+            gameState.gameActive = false;
+            gameState.gameFinished = true;
+            
+            if (index === gameState.correctIndex) {
+                // Correct choice - show Subbu
+                figImage.src = 'public/Paradha_Unveiled_Anupama_Subbu.png';
+                figurine.classList.add('correct');
+                message.textContent = '🎉 You found Subbu! She\'s ready to lift the veil!';
+                message.style.color = '#4caf50';
+                
+                // Auto-reset after 4 seconds for correct answer
+                setTimeout(() => {
+                    if (gameState.gameFinished) {
+                        resetGame();
+                    }
+                }, 4000);
+            } else {
+                // Wrong choice - show other character
+                figImage.src = 'public/Paradha_Unveiled_Harsha.png';          
+                figurine.classList.add('wrong');
+                message.textContent = '❌ Not Subbu! Click "Reset Game" to try again.';
+                message.style.color = '#ff6b6b';
+            }
+            
+            message.classList.add('show');
+        }
+
+        function disableAllFigurines() {
+            gameState.figurines.forEach(figurine => {
+                if (!figurine.classList.contains('revealed')) {
+                    figurine.classList.add('disabled');
+                    figurine.style.pointerEvents = 'none';
+                    figurine.style.opacity = '0.6';
+                    figurine.style.cursor = 'not-allowed';
+                }
+            });
+        }
+
+        function resetGame() {
+            // Clear message first
+            const message = document.getElementById('gameMessage');
+            message.classList.remove('show');
+            
+            // Small delay before reinitializing
+            setTimeout(() => {
+                initializeGame();
+            }, 300);
+        }
+
+        function flipPoster() {
+            const posterFlip = document.getElementById('posterFlip');
+            posterFlip.classList.remove('flipped');
+
+            // // Stop the click handler from re-flipping immediately
+            // posterFlip.style.pointerEvents = "none";  
+
+            // // Re-enable click after animation ends (~0.9s)
+            // setTimeout(() => {
+            //     posterFlip.style.pointerEvents = "auto";
+            // }, 900);
+        }
+
+
+
+        // Initialize game when poster is clicked
+        document.addEventListener('DOMContentLoaded', function() {
+            const posterFlip = document.getElementById('posterFlip');
+            posterFlip.addEventListener('click', function(e) {
+                // Only flip if clicking on the FRONT side
+                if (!this.classList.contains('flipped') && e.target.closest('.poster-front')) {
+                    this.classList.add('flipped');
+                    setTimeout(() => {
+                        initializeGame();
+                    }, 400);
+                }
+            });
+        });
+
         // Interactive functions
         function openTrailer() {
             const modal = document.getElementById('trailerModal');
             modal.classList.add('open');
-            toggleTrailerVideo(modal);
+            toggleTrailerVideo(modal);  // starts video
         }
 
         function closeTrailer() {
             const modal = document.getElementById('trailerModal');
             modal.classList.remove('open');
-            toggleTrailerVideo(modal);
-        }
 
-        function toggleTrailerVideo(modal) {
+            // Always stop + reset video
             const video = modal.querySelector('video');
             if (video) {
-                if (video.paused) {
+                video.pause();
+                video.currentTime = 0;
+            }
+        }
+
+                function toggleTrailerVideo(modal) {
+            const video = modal.querySelector('video');
+            if (video) {
+                if (modal.classList.contains('open')) {
+                    // modal just opened → start fresh
+                    video.currentTime = 0;
                     video.play();
                 } else {
-                    video.currentTime = 0;
+                    // modal closed (by button or YouTube link) → stop
                     video.pause();
+                    video.currentTime = 0;
                 }
             }
         }
@@ -893,46 +1350,6 @@
                 }, 5000);
             }
         }, 10000);
-
-        // Countdown timer
-        const releaseDate = new Date('2025-08-22T00:00:00+05:30');
-        const d = document.getElementById('d');
-        const h = document.getElementById('h');
-        const m = document.getElementById('m');
-        const s = document.getElementById('s');
-
-        function updateCountdown() {
-            const now = new Date();
-            const diff = Math.max(0, releaseDate - now);
-            const sec = Math.floor(diff / 1000);
-            const days = Math.floor(sec / 86400);
-            const hours = Math.floor((sec % 86400) / 3600);
-            const mins = Math.floor((sec % 3600) / 60);
-            const secs = sec % 60;
-
-            if (d) d.textContent = String(days).padStart(2, '0');
-            if (h) h.textContent = String(hours).padStart(2, '0');
-            if (m) m.textContent = String(mins).padStart(2, '0');
-            if (s) s.textContent = String(secs).padStart(2, '0');
-        }
-
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-
-        // Journey toggles
-        function toggleJourney() {
-            const j = document.getElementById('journey');
-            const isHidden = j.style.display === 'none';
-            j.style.display = isHidden ? 'grid' : 'none';
-            j.setAttribute('aria-hidden', (!isHidden).toString());
-        }
-
-        function revealNode(el) {
-            el.classList.toggle('revealed');
-            if (el.textContent === 'Village') el.textContent = 'Whispers';
-            else if (el.textContent === 'Tradition') el.textContent = 'Test';
-            else if (el.textContent === 'Revelation') el.textContent = 'Rise';
-        }
 
         // Subtle parallax background on scroll
         const bg = document.getElementById('bg');
