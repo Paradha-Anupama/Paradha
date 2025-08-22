@@ -267,7 +267,7 @@
             50% { text-shadow: 0 0 30px rgba(212, 175, 55, 0.8), 0 0 60px rgba(212, 175, 55, 0.5); }
         }
 
-        .title-telugu {
+        .telugu-title {
             font-family: 'Noto Serif Telugu', serif;
             font-weight: 700;
             letter-spacing: 1px;
@@ -385,6 +385,35 @@
             overflow: hidden;
         }
 
+        /* Click to return message - initially hidden */
+        .click-to-return {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(212, 175, 55, 0.7);
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px 10px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 5;
+        }
+       
+        .click-to-return.temporary {
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+            pointer-events: auto;
+        }
+
+        .click-to-return.hidden {
+                opacity: 0;
+                pointer-events: none;
+        }
+
+        /* Background hover effect */
         .poster-back {
             background: linear-gradient(135deg, #2c1e16, #4a3223); /* Dark brown instead of red */
             transform: rotateY(180deg);
@@ -396,15 +425,36 @@
             border: 5px solid #d4af37;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* Show message only when game is active (no results showing) */
+        .poster-back:not(.show-results) .click-to-return {
+            opacity: 0.7;
+        }
+
+        .poster-back:not(.show-results):hover {
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.3);
+        }
+
+        .poster-back:not(.show-results):hover .click-to-return {
+            opacity: 1;
         }
 
         .game-title {
             font-family: 'Playfair Display', serif;
             color: #f0dea6;
             font-size: clamp(1.4rem, 3.5vw, 1.8rem);
-            margin-bottom: clamp(15px, 3vw, 20px);
+            margin-bottom: clamp(10px, 2.5vw, 15px); /* Reduced margin */
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
             text-align: center;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            width: 80%;
+            max-width: 250px;
         }
 
         /* Responsive game grid */
@@ -490,14 +540,14 @@
         }
 
         .game-btn {
-            background: linear-gradient(135deg, #d4af37, #e6c158); /* brighter gold */
+            background: linear-gradient(135deg, #d4af37, #e6c158);
             color: #1a1a1a;
             border: none;
-            padding: clamp(6px, 2vw, 10px) clamp(12px, 3vw, 18px);
+            padding: clamp(8px, 2.5vw, 12px) clamp(16px, 4vw, 24px);
             border-radius: 25px;
             font-weight: bold;
             cursor: pointer;
-            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
         }
@@ -510,10 +560,7 @@
 
         .game-message {
             position: relative;
-            bottom: auto;
             margin-top: 15px;
-            left: auto;
-            transform: none;
             color: #f0dea6;
             font-size: clamp(0.9rem, 2.5vw, 1rem);
             text-align: center;
@@ -521,13 +568,27 @@
             transition: opacity 0.3s ease;
             max-width: 90%;
             background: rgba(0, 0, 0, 0.7);
-            padding: 8px 12px;
+            padding: 10px 16px;
             border-radius: 20px;
             font-weight: bold;
+            width: 80%;
         }
 
         .game-message.show {
             opacity: 1;
+        }
+
+        .game-message.correct {
+            color: #a5d6a7;
+            background: rgba(76, 175, 80, 0.15);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        /* Error message styling */
+        .game-message.wrong {
+            color: #ffab91;
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid rgba(255, 107, 107, 0.3);
         }
 
         /* BookMyShow section styles */
@@ -844,10 +905,10 @@
                 min-height: 380px;
             }
         }
-
+        
         @media (max-width: 380px) {
             .game-grid {
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns: repeat(3, 1fr); /* Changed from 5 to 3 */
                 max-width: 240px;
                 gap: 4px;
             }
@@ -894,7 +955,7 @@
     <!-- The interactive veil that users must "lift" -->
     <div id="veil">
         <h1>PARADHA</h1>
-        <div class="title-telugu">పరదా</div>
+        <div class="telugu-title">పరదా</div>
         <div class="instructions">
             <p class="tagline">Tradition! Rebellion! Revelation!</p>
             <p>Use <b>two fingers</b> and swipe upward to lift the veil!</p>
@@ -942,11 +1003,9 @@
                         <div class="game-grid" id="gameGrid">
                             <!-- 9 figurines will be generated by JavaScript -->
                         </div>
-                        <div class="game-controls">
-                            <button class="game-btn" onclick="resetGame()">Reset Game</button>
-                            <button class="game-btn" onclick="flipPoster()">Back to Poster</button>
-                        </div>
                         <div class="game-message" id="gameMessage"></div>
+                        <!-- Add this line -->
+                        <div class="click-to-return">Click background to return</div>
                     </div>
                 </div>
             </div>
@@ -1176,6 +1235,17 @@
             message.classList.remove('show');
         }
 
+        // Add this function to show/hide the return message
+        function toggleReturnMessage(show) {
+            const posterBack = document.querySelector('.poster-back');
+            if (show) {
+                posterBack.classList.remove('show-results');
+            } else {
+                posterBack.classList.add('show-results');
+            }
+        }
+
+        // Reveal Figurine Function for us to see whether we were right or wrong there!!
         function revealFigurine(index) {
             // Check if game is still active
             if (!gameState.gameActive || gameState.gameFinished) return;
@@ -1183,6 +1253,9 @@
             const figurine = gameState.figurines[index];
             const figImage = figurine.querySelector('.figurine-image');
             const message = document.getElementById('gameMessage');
+            
+            // Hide the return message when results show
+            toggleReturnMessage(false);
             
             // Mark this figurine as revealed
             figurine.classList.add('revealed');
@@ -1192,28 +1265,33 @@
             gameState.gameActive = false;
             gameState.gameFinished = true;
             
+            // Set different timeout durations based on answer
+            let resetTimeout = 4000; // Default 4 seconds
+            
             if (index === gameState.correctIndex) {
                 // Correct choice - show Subbu
                 figImage.src = 'public/Paradha_Unveiled_Anupama_Subbu.png';
                 figurine.classList.add('correct');
                 message.textContent = '🎉 You found Subbu! She\'s ready to lift the veil!';
-                message.style.color = '#4caf50';
-                
-                // Auto-reset after 4 seconds for correct answer
-                setTimeout(() => {
-                    if (gameState.gameFinished) {
-                        resetGame();
-                    }
-                }, 4000);
+                message.classList.add('correct');
+                resetTimeout = 3000; // 3 seconds for correct answer (slightly shorter)
             } else {
                 // Wrong choice - show other character
                 figImage.src = 'public/Paradha_Unveiled_Harsha.png';          
                 figurine.classList.add('wrong');
-                message.textContent = '❌ Not Subbu! Click "Reset Game" to try again.';
-                message.style.color = '#ff6b6b';
+                message.textContent = 'Not Subbu! Try again in a moment...';
+                message.classList.add('wrong');
+                resetTimeout = 1500; // 1.5 seconds for wrong answer (much quicker)
             }
             
             message.classList.add('show');
+            
+            // Auto-reset after different timeouts based on answer type
+            setTimeout(() => {
+                if (gameState.gameFinished) {
+                    resetGame();
+                }
+            }, resetTimeout);
         }
 
         function disableAllFigurines() {
@@ -1230,7 +1308,10 @@
         function resetGame() {
             // Clear message first
             const message = document.getElementById('gameMessage');
-            message.classList.remove('show');
+            message.classList.remove('show', 'correct', 'wrong');
+            
+            // Hide the return message
+            hideReturnMessage();
             
             // Small delay before reinitializing
             setTimeout(() => {
@@ -1238,32 +1319,47 @@
             }, 300);
         }
 
-        function flipPoster() {
-            const posterFlip = document.getElementById('posterFlip');
-            posterFlip.classList.remove('flipped');
-
-            // // Stop the click handler from re-flipping immediately
-            // posterFlip.style.pointerEvents = "none";  
-
-            // // Re-enable click after animation ends (~0.9s)
-            // setTimeout(() => {
-            //     posterFlip.style.pointerEvents = "auto";
-            // }, 900);
+        // Function to show the return message temporarily
+        function showTemporaryReturnMessage() {
+                const returnMessage = document.querySelector('.click-to-return');
+                returnMessage.classList.remove('hidden');
+                returnMessage.classList.add('temporary');
+                
+                setTimeout(() => {
+                    returnMessage.classList.remove('temporary');
+                    returnMessage.classList.add('hidden');
+                }, 1000);
         }
 
-
+        // Function to hide the return message
+        function hideReturnMessage() {
+                const returnMessage = document.querySelector('.click-to-return');
+                returnMessage.classList.remove('temporary');
+                returnMessage.classList.add('hidden');
+        }
 
         // Initialize game when poster is clicked
         document.addEventListener('DOMContentLoaded', function() {
             const posterFlip = document.getElementById('posterFlip');
+            
             posterFlip.addEventListener('click', function(e) {
-                // Only flip if clicking on the FRONT side
-                if (!this.classList.contains('flipped') && e.target.closest('.poster-front')) {
-                    this.classList.add('flipped');
-                    setTimeout(() => {
-                        initializeGame();
-                    }, 400);
-                }
+            // Only flip if clicking on the FRONT side or BACKGROUND (not figurines)
+            const isClickOnFigurine = e.target.closest('.figurine');
+            const isClickOnGameMessage = e.target.closest('.game-message');
+            
+            if (!this.classList.contains('flipped')) {
+                // Clicking on front side - flip to game
+                this.classList.add('flipped');
+                setTimeout(() => {
+                initializeGame();
+                showTemporaryReturnMessage(); // Show return message for 1 second
+                }, 400);
+            } 
+            else if (!isClickOnFigurine && !isClickOnGameMessage) {
+                // Clicking on background (not figurines or message) - flip back to poster
+                this.classList.remove('flipped');
+                hideReturnMessage(); // Hide the return message
+            }
             });
         });
 
@@ -1286,7 +1382,7 @@
             }
         }
 
-                function toggleTrailerVideo(modal) {
+        function toggleTrailerVideo(modal) {
             const video = modal.querySelector('video');
             if (video) {
                 if (modal.classList.contains('open')) {
@@ -1354,46 +1450,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
