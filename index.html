@@ -325,6 +325,12 @@
             text-align: center;
         }
 
+        
+        .section.hero {
+            position: relative;
+            overflow: visible;
+        }
+
         .hero h2 {
             font-family: 'Playfair Display', serif;
             font-weight: 800;
@@ -351,8 +357,17 @@
             margin-bottom: 30px;
             aspect-ratio: 16/9;
             min-height: 300px;
+            min-height: auto !important;
+            isolation: isolate;
         }
-
+        
+        .poster-fixed-height {
+            height: 500px; /* Set fixed height based on your content */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
         .poster-flip {
             position: relative;
             width: 100%;
@@ -375,6 +390,7 @@
             border: 5px solid #d4af37;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
         }
 
         .poster-front {
@@ -390,6 +406,7 @@
             position: absolute;
             bottom: 10px;
             left: 50%;
+            margin-top: auto; 
             transform: translateX(-50%);
             color: rgba(212, 175, 55, 0.7);
             font-size: 0.8rem;
@@ -415,19 +432,24 @@
 
         /* Background hover effect */
         .poster-back {
-            background: linear-gradient(135deg, #2c1e16, #4a3223); /* Dark brown instead of red */
+            background: linear-gradient(135deg, #2c1e16, #4a3223);
             transform: rotateY(180deg);
             padding: clamp(15px, 3vw, 20px);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            /* justify-content: center; */
+            justify-content: flex-start;
             border: 5px solid #d4af37;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             position: relative;
-            cursor: pointer;
-            transition: box-shadow 0.3s ease;
+                    cursor: pointer;
+                    transition: box-shadow 0.3s ease;
+            overflow: visible !important;
+            height: auto;
+            min-height: auto;
+            gap: 8px;
         }
 
         /* Show message only when game is active (no results showing) */
@@ -442,11 +464,24 @@
         .poster-back:not(.show-results):hover .click-to-return {
             opacity: 1;
         }
+        
+        .game-title-container {
+            position: relative;
+            height: 60px;
+            margin-bottom: 15px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
 
         .game-title {
             font-family: 'Playfair Display', serif;
             color: #f0dea6;
             font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            flex-shrink: 0;
+            margin: 10px 0;
             margin-bottom: clamp(10px, 2.5vw, 15px); /* Reduced margin */
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
             text-align: center;
@@ -455,6 +490,11 @@
             border-radius: 20px;
             width: 80%;
             max-width: 250px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: opacity 0.3s ease;
         }
 
         /* Responsive game grid */
@@ -466,6 +506,7 @@
             width: 100%;
             max-width: 320px;
             justify-items: center;
+            flex-shrink: 0;
         }
 
         .figurine {
@@ -531,14 +572,6 @@
             transform: scale(1.05);
         }
 
-        .game-controls {
-            display: flex;
-            gap: clamp(8px, 2vw, 10px);
-            margin-top: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
         .game-btn {
             background: linear-gradient(135deg, #d4af37, #e6c158);
             color: #1a1a1a;
@@ -559,8 +592,6 @@
         }
 
         .game-message {
-            position: relative;
-            margin-top: 15px;
             color: #f0dea6;
             font-size: clamp(0.9rem, 2.5vw, 1rem);
             text-align: center;
@@ -571,11 +602,21 @@
             padding: 10px 16px;
             border-radius: 20px;
             font-weight: bold;
-            width: 80%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 89%;
+            margin-top: 0;
+            z-index: 10;
         }
 
         .game-message.show {
             opacity: 1;
+        }
+
+        .game-title.hidden {
+            opacity: 0;
         }
 
         .game-message.correct {
@@ -884,7 +925,38 @@
             }
             
             .poster-container {
-                min-height: 420px;
+                min-height: 400px;
+            }
+
+            .poster-fixed-height {
+                height: 450px;
+            }
+            
+            .poster-back {
+                padding: clamp(12px, 3vw, 16px); /* Responsive padding for mobile */
+                justify-content: space-around; /* Better spacing distribution */
+            }
+            
+            .game-title-container {
+                height: 45px;
+                margin-bottom: 2.8px;
+            }
+            
+            .game-title {
+                font-size: clamp(1.2rem, 3.2vw, 1.5rem); /* Responsive font size */
+                padding: 6px 12px; /* Adjust padding */
+                width: 70%; /* Slightly narrower */
+            }
+            
+            .game-message {
+                font-size: clamp(0.9rem, 2.8vw, 1rem); /* Responsive font size */
+                width: 85%; /* Slightly wider */
+                padding: 8px 12px;
+            }
+            
+            .click-to-return {
+                font-size: 0.75rem; /* Slightly smaller text */
+                bottom: 8px; /* Adjust position */
             }
         }
 
@@ -904,11 +976,53 @@
             .poster-container {
                 min-height: 380px;
             }
+
+            .poster-fixed-height {
+                height: 450px;
+            }
+            
+            .poster-back {
+                padding: clamp(10px, 2.5vw, 14px); /* Even smaller padding */
+                justify-content: space-between; /* Better spacing */
+            }
+            
+            .game-title-container {
+                height: 42px; /* Further reduced height */
+                margin-bottom: 2.236px;
+            }
+            
+            .game-title {
+                font-size: clamp(1.1rem, 3vw, 1.3rem); /* Smaller font */
+                padding: 5px 10px;
+                width: 75%;
+            }
+            
+            .game-message {
+                font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+                width: 90%;
+                padding: 6px 10px;
+            }
+            
+            .game-controls {
+                gap: 6px; /* Tighter spacing */
+                margin-top: 8px;
+            }
+            
+            .game-btn {
+                padding: 6px 14px;
+                font-size: 0.85rem;
+            }
+            
+            .click-to-return {
+                font-size: 0.7rem;
+                bottom: 6px;
+            }
         }
+            
         
         @media (max-width: 380px) {
             .game-grid {
-                grid-template-columns: repeat(3, 1fr); /* Changed from 5 to 3 */
+                grid-template-columns: repeat(3, 1fr);
                 max-width: 240px;
                 gap: 4px;
             }
@@ -917,6 +1031,52 @@
                 width: 42px;
                 height: 58px;
             }
+            
+            .poster-container {
+                min-height: 340px; /* Adjust container height */
+            }
+            
+            .poster-fixed-height {
+                height: 450px;
+            }
+            
+            .poster-back {
+                padding: 8px; /* Minimal padding */
+                justify-content: space-between;
+            }
+            
+            .game-title-container {
+                height: 36px; /* Ssmallest height */
+                margin-bottom: 1px;
+            }
+            
+            .game-title {
+                font-size: 1rem; /* Fixed small size */
+                padding: 4px 8px;
+                width: 80%;
+            }
+            
+            .game-message {
+                font-size: 0.8rem;
+                width: 95%;
+                padding: 5px 8px;
+            }
+            
+            .game-controls {
+                gap: 4px;
+                margin-top: 6px;
+            }
+            
+            .game-btn {
+                padding: 5px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .click-to-return {
+                font-size: 0.65rem;
+                bottom: 4px;
+            }
+            
         }
 
         /* Tablet and larger mobile devices */
@@ -999,12 +1159,13 @@
                         </div>
                     </div>
                     <div class="poster-back">
-                        <div class="game-title">Find Subbu</div>
+                        <div class="game-title-container">
+                            <div class="game-title">Find Subbu</div>
+                            <div class="game-message" id="gameMessage"></div>
+                        </div>
                         <div class="game-grid" id="gameGrid">
                             <!-- 9 figurines will be generated by JavaScript -->
                         </div>
-                        <div class="game-message" id="gameMessage"></div>
-                        <!-- Add this line -->
                         <div class="click-to-return">Click background to return</div>
                     </div>
                 </div>
@@ -1259,6 +1420,7 @@
             
             // Mark this figurine as revealed
             figurine.classList.add('revealed');
+            document.querySelector('.game-title').classList.add('hidden');
             
             // Disable ALL figurines immediately after first click
             disableAllFigurines();
@@ -1272,7 +1434,7 @@
                 // Correct choice - show Subbu
                 figImage.src = 'public/Paradha_Unveiled_Anupama_Subbu.png';
                 figurine.classList.add('correct');
-                message.textContent = '🎉 You found Subbu! She\'s ready to lift the veil!';
+                message.textContent = '🎉 You found Subbu! Yes She\'s lifted the Veil!';
                 message.classList.add('correct');
                 resetTimeout = 3000; // 3 seconds for correct answer (slightly shorter)
             } else {
@@ -1309,6 +1471,7 @@
             // Clear message first
             const message = document.getElementById('gameMessage');
             message.classList.remove('show', 'correct', 'wrong');
+            document.querySelector('.game-title').classList.remove('hidden');
             
             // Hide the return message
             hideReturnMessage();
@@ -1343,23 +1506,23 @@
             const posterFlip = document.getElementById('posterFlip');
             
             posterFlip.addEventListener('click', function(e) {
-            // Only flip if clicking on the FRONT side or BACKGROUND (not figurines)
-            const isClickOnFigurine = e.target.closest('.figurine');
-            const isClickOnGameMessage = e.target.closest('.game-message');
-            
-            if (!this.classList.contains('flipped')) {
-                // Clicking on front side - flip to game
-                this.classList.add('flipped');
-                setTimeout(() => {
-                initializeGame();
-                showTemporaryReturnMessage(); // Show return message for 1 second
-                }, 400);
-            } 
-            else if (!isClickOnFigurine && !isClickOnGameMessage) {
-                // Clicking on background (not figurines or message) - flip back to poster
-                this.classList.remove('flipped');
-                hideReturnMessage(); // Hide the return message
-            }
+                // Only flip if clicking on the FRONT side or BACKGROUND (not figurines)
+                const isClickOnFigurine = e.target.closest('.figurine');
+                const isClickOnGameMessage = e.target.closest('.game-message');
+                
+                if (!this.classList.contains('flipped')) {
+                    // Clicking on front side - flip to game
+                    this.classList.add('flipped');
+                    setTimeout(() => {
+                    initializeGame();
+                    showTemporaryReturnMessage(); // Show return message for 1 second
+                    }, 400);
+                } 
+                else if (!isClickOnFigurine && !isClickOnGameMessage) {
+                    // Clicking on background (not figurines or message) - flip back to poster
+                    this.classList.remove('flipped');
+                    hideReturnMessage(); // Hide the return message
+                }
             });
         });
 
