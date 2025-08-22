@@ -350,6 +350,7 @@
             height: auto;
             margin-bottom: 30px;
             aspect-ratio: 16/9;
+            min-height: 300px;
         }
 
         .poster-flip {
@@ -359,6 +360,7 @@
             transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
             transform-style: preserve-3d;
             cursor: pointer;
+            min-height: inherit;
         }
 
         .poster-flip.flipped {
@@ -405,12 +407,13 @@
         /* Responsive game grid */
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); /* ✅ 5 columns, 2 rows = 10 figurines */
+            grid-template-columns: repeat(5, 1fr);
             gap: clamp(5px, 1.5vw, 8px);
             margin-bottom: 15px;
             width: 100%;
             max-width: 350px;
             justify-items: center;
+            padding: 10px;
         }
 
         .figurine {
@@ -425,6 +428,8 @@
             justify-content: center;
             position: relative;
             overflow: visible;
+            min-width: 40px;
+            min-height: 55px;
         }
 
         .figurine:hover:not(.revealed):not(.disabled) {
@@ -803,39 +808,25 @@
 
         /* Mobile specific adjustments */
         @media (max-width: 768px) {
-            .instructions {
-                max-width: 90%;
-                margin-bottom: 20px;
-            }
-
-            .section {
-                padding: 20px 15px;
-            }
-
-            .character {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 15px;
-            }
-
-            .avatar {
-                width: clamp(100px, 30vw, 120px);
-                margin: 0 auto;
-            }
-
             .game-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 8px;
+                grid-template-columns: repeat(5, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+                gap: 6px;
                 max-width: 280px;
             }
-
-            .social-share {
-                gap: 10px;
+            
+            .figurine {
+                width: 48px;
+                height: 64px;
             }
-
-            .btn {
-                min-width: 120px;
-                margin: 5px;
+            
+            .poster-container {
+                min-height: 380px;
+                aspect-ratio: unset;
+            }
+            
+            .poster-back {
+                padding: 12px;
             }
         }
 
@@ -861,6 +852,19 @@
             .game-btn {
                 width: 100%;
                 max-width: 150px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .game-grid {
+                grid-template-columns: repeat(5, 1fr);
+                max-width: 240px;
+                gap: 4px;
+            }
+            
+            .figurine {
+                width: 42px;
+                height: 58px;
             }
         }
 
@@ -1360,3 +1364,36 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
