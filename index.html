@@ -378,10 +378,18 @@
             min-height: inherit;
         }
 
+        
         .poster-flip.flipped {
             transform: rotateY(180deg);
         }
-
+        
+        
+        .poster-container:has(.poster-flip.flipped) ~ * {
+            transform: translateY(100px);
+            transition: transform 0.8s ease;
+        }
+        
+        
         .poster-front, .poster-back {
             position: absolute;
             width: 100%;
@@ -393,6 +401,7 @@
             overflow: hidden;
         }
 
+        
         .poster-front {
             background: linear-gradient(45deg, #2c1e16, #4a3223);
             display: flex;
@@ -1513,15 +1522,17 @@
                 if (!this.classList.contains('flipped')) {
                     // Clicking on front side - flip to game
                     this.classList.add('flipped');
+                    document.querySelector('.hero').classList.add('game-active'); // Add this line
                     setTimeout(() => {
-                    initializeGame();
-                    showTemporaryReturnMessage(); // Show return message for 1 second
+                        initializeGame();
+                        showTemporaryReturnMessage();
                     }, 400);
                 } 
                 else if (!isClickOnFigurine && !isClickOnGameMessage) {
-                    // Clicking on background (not figurines or message) - flip back to poster
+                    // Clicking on background - flip back to poster
                     this.classList.remove('flipped');
-                    hideReturnMessage(); // Hide the return message
+                    document.querySelector('.hero').classList.remove('game-active'); // Add this line
+                    hideReturnMessage();
                 }
             });
         });
@@ -1613,3 +1624,18 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
