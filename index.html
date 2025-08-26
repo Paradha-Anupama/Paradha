@@ -17,12 +17,14 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             /* Make everything non-selectable */
             -webkit-user-select: none;
+            -khtml-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
             /* Prevent text selection on touch devices */
             -webkit-touch-callout: none;
             -webkit-tap-highlight-color: transparent;
+            touch-action: none;
         }
 
         body {
@@ -113,7 +115,10 @@
             align-items: center;
             text-align: center;
             padding: 20px;
-            transition: all 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.6s ease;
+            transform: translateZ(0);
+            touch-action: none; /* Prevent default touch behaviors */
+            -webkit-overflow-scrolling: touch;
             will-change: transform, opacity, filter;
             /* Ultra-realistic saree shadows and depth */
             box-shadow: 
@@ -382,7 +387,7 @@
         .poster-flip.flipped {
             transform: rotateY(180deg);
         }
-        
+
         
         .poster-container:has(.poster-flip.flipped) ~ * {
             transform: translateY(100px);
@@ -644,19 +649,13 @@
         /* BookMyShow section styles */
         .book-tickets {
             position: relative;
-            background: linear-gradient(135deg, 
-                rgba(212, 175, 55, 0.15) 0%, 
-                rgba(178, 34, 34, 0.12) 50%, 
-                rgba(212, 175, 55, 0.18) 100%
-            );
-            border: 2px solid rgba(212, 175, 55, 0.6);
-            border-radius: 20px;
-            padding: clamp(20px, 4vw, 30px);
-            margin: 25px 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border: none;
+            border-radius: 16px;
+            padding: clamp(24px, 5vw, 32px);
+            margin: 30px 0;
             text-align: center;
-            box-shadow: 
-                0 15px 40px rgba(212, 175, 55, 0.2), 
-                inset 0 2px 10px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 12px 32px rgba(30, 60, 114, 0.4);
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
@@ -671,7 +670,7 @@
             height: 100%;
             background: linear-gradient(90deg, 
                 transparent, 
-                rgba(212, 175, 55, 0.3), 
+                rgba(255, 255, 255, 0.1), 
                 transparent
             );
             animation: shimmer 3s infinite;
@@ -685,9 +684,9 @@
         .book-tickets h3 {
             font-family: 'Playfair Display', serif;
             font-size: clamp(1.4rem, 3.5vw, 1.8rem);
-            color: #f0dea6;
+            color: #ffffff;
             margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 2;
         }
@@ -698,37 +697,52 @@
             border-radius: 24px; /* ✅ smoother card look */
         }
 
-        .book-now-btn {
-            background: linear-gradient(135deg, #d4af37 0%, #e6c158 100%);
-            color: #1a1a1a;
-            border: none;
-            padding: clamp(14px, 3vw, 18px) clamp(26px, 5vw, 34px); /* ✅ more padding */
-            font-size: clamp(1.1rem, 2.8vw, 1.3rem);
-            font-weight: bold;
-            border-radius: 55px; /* ✅ bigger pill shape */
-            cursor: pointer;
-            margin: 20px 12px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 2;
-            box-shadow: 
-                0 10px 28px rgba(212, 175, 55, 0.5),
-                inset 0 2px 6px rgba(255, 255, 255, 0.3);
+        .bookmyshow-logo {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            text-decoration:none;
+            background: #dc2626;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+            margin-left: 8px;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
         }
 
+        .bookmyshow-logo::before {
+            content: "📱";
+            margin-right: 6px;
+            font-size: 0.9em;
+        }
+
+        .book-now-btn {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: #ffffff;
+            border: none;
+            padding: clamp(16px, 3.5vw, 20px) clamp(28px, 6vw, 36px);
+            font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px 12px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
 
         .book-now-btn:hover {
-            background: linear-gradient(135deg, #e6c158 0%, #f0d26b 100%);
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 
-                0 15px 35px rgba(212, 175, 55, 0.6),
-                inset 0 2px 8px rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.5);
         }
 
         .book-now-btn:active {
@@ -746,13 +760,13 @@
         }
 
         .urgent-notice {
-            background: linear-gradient(45deg, rgba(255, 0, 0, 0.1), rgba(255, 69, 0, 0.1));
-            border: 1px dashed rgba(255, 69, 0, 0.6);
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
             padding: 12px 20px;
-            border-radius: 15px;
+            border-radius: 8px;
             margin-top: 15px;
             font-size: clamp(0.85rem, 2vw, 0.95rem);
-            color: #ffab91;
+            color: #fecaca;
             position: relative;
             z-index: 2;
         }
@@ -937,6 +951,10 @@
                 min-height: 400px;
             }
 
+            .poster-container:has(.poster-flip.flipped) ~ * {
+                transform: translateY(150px);
+            }
+
             .poster-fixed-height {
                 height: 450px;
             }
@@ -984,6 +1002,10 @@
             
             .poster-container {
                 min-height: 380px;
+            }
+
+            .poster-container:has(.poster-flip.flipped) ~ * {
+                transform: translateY(180px);
             }
 
             .poster-fixed-height {
@@ -1043,6 +1065,10 @@
             
             .poster-container {
                 min-height: 340px; /* Adjust container height */
+            }
+
+            .poster-container:has(.poster-flip.flipped) ~ * {
+                transform: translateY(200px);
             }
             
             .poster-fixed-height {
@@ -1183,13 +1209,13 @@
             <h4>IN THE NAME OF LOVE</h4>
             <p class="tagline">Is now in the Theaters Worldwide</p>
             
-            <div style="margin-top:20px; display:flex; flex-wrap:wrap; justify-content:center; gap:10px;">
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;">
                 <button class="btn" onclick="openTrailer()">Watch Trailer</button>
             </div>
 
             <!-- Enhanced BookMyShow Ticket Booking Section -->
             <div class="book-tickets">
-                <h3>🎬 Book Your Tickets Now!</h3>
+                <h3 style="color: #e2e8f0;">Book your tickets now on<span class="bookmyshow-logo">BookMyShow</span></h3>
                 <a href="https://in.bookmyshow.com/movies/paradha/ET00398438" target="_blank" rel="noopener noreferrer" class="book-now-btn">                    <span class="ticket-icon">🎫</span>
                     Book Tickets
                 </a>
@@ -1250,12 +1276,14 @@
 
         veil.addEventListener("touchstart", (e) => {
             if (e.touches.length === 2) {
+                e.preventDefault();
+                veil.style.willChange = 'transform, opacity';
                 isTwoFinger = true;
                 startY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
                 veil.classList.add("dragging");
                 hands.forEach(h => h.classList.add('show'));
             }
-        });
+        }, { passive: false });
 
         veil.addEventListener("touchmove", (e) => {
             if (!isTwoFinger || e.touches.length !== 2) return;
@@ -1263,7 +1291,7 @@
             currentY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
             const deltaY = startY - currentY;
             if (deltaY > 0) {
-                const progress = Math.min(deltaY / (veilHeight * 0.7), 1);
+                const progress = Math.min(deltaY / (veilHeight * 0.6), 1);
                 veil.style.transform = `translateY(-${deltaY}px) scale(${1 + progress * 0.05})`;
                 if (deltaY > veilHeight * 0.7) {
                     completeVeilLift();
@@ -1280,11 +1308,13 @@
                 }
                 isTwoFinger = false;
                 veil.classList.remove("dragging");
+                veil.style.willChange = 'auto';
             }
         });
 
         // Desktop mouse events
         veil.addEventListener('mousedown', (e) => {
+            veil.style.willChange = 'transform, opacity';
             startY = e.clientY;
             isDragging = true;
             veil.classList.add('dragging');
@@ -1310,6 +1340,7 @@
             isDragging = false;
             veil.classList.remove('dragging');
             document.body.style.cursor = 'default';
+            veil.style.willChange = 'auto';
             if (startY - currentY < veilHeight * 0.7) {
                 hands.forEach(h => h.classList.remove('show'));
                 veil.style.transform = 'translateY(0)';
@@ -1369,7 +1400,8 @@
             correctIndex: 0,
             gameActive: true,
             figurines: [],
-            gameFinished: false
+            gameFinished: false,
+            showingResults: false 
         };
 
         function initializeGame() {
@@ -1435,6 +1467,7 @@
             disableAllFigurines();
             gameState.gameActive = false;
             gameState.gameFinished = true;
+            gameState.showingResults = true;
             
             // Set different timeout durations based on answer
             let resetTimeout = 4000; // Default 4 seconds
@@ -1477,6 +1510,7 @@
         }
 
         function resetGame() {
+            gameState.showingResults = false;
             // Clear message first
             const message = document.getElementById('gameMessage');
             message.classList.remove('show', 'correct', 'wrong');
@@ -1515,6 +1549,10 @@
             const posterFlip = document.getElementById('posterFlip');
             
             posterFlip.addEventListener('click', function(e) {
+                // Block clicks if showing game results
+                if (gameState.showingResults) {
+                    return;
+                }
                 // Only flip if clicking on the FRONT side or BACKGROUND (not figurines)
                 const isClickOnFigurine = e.target.closest('.figurine');
                 const isClickOnGameMessage = e.target.closest('.game-message');
@@ -1522,10 +1560,10 @@
                 if (!this.classList.contains('flipped')) {
                     // Clicking on front side - flip to game
                     this.classList.add('flipped');
-                    document.querySelector('.hero').classList.add('game-active'); // Add this line
-                    setTimeout(() => {
-                        initializeGame();
-                        showTemporaryReturnMessage();
+                    document.querySelector('.hero').classList.add('game-active'); 
+                    setTimeout(() => { 
+                        initializeGame(); 
+                        showTemporaryReturnMessage(); 
                     }, 400);
                 } 
                 else if (!isClickOnFigurine && !isClickOnGameMessage) {
